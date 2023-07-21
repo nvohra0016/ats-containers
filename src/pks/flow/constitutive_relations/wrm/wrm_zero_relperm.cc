@@ -27,8 +27,8 @@ WRMZeroRelPerm::WRMZeroRelPerm(Teuchos::ParameterList& plist) : plist_(plist)
 void
 WRMZeroRelPerm::InitializeFromPlist_()
 {
-  AMANZI_ASSERT(plist_.isSublist("WRM parameters"));
-  Teuchos::ParameterList sublist = plist_.sublist("WRM parameters");
+  Teuchos::ParameterList& sublist = plist_.sublist("WRM parameters");
+  sublist.remove("model type", false);
 
   WRMFactory fac;
   wrm_ = fac.createWRM(sublist);

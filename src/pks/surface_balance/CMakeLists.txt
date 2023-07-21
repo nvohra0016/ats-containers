@@ -14,7 +14,6 @@ set(ats_surface_balance_src_files
   constitutive_relations/land_cover/longwave_evaluator.cc
   constitutive_relations/land_cover/incident_shortwave_radiation_model.cc
   constitutive_relations/land_cover/incident_shortwave_radiation_evaluator.cc
-  constitutive_relations/land_cover/evaporation_downregulation_model.cc
   constitutive_relations/land_cover/evaporation_downregulation_evaluator.cc
   constitutive_relations/land_cover/LandCover.cc
   constitutive_relations/land_cover/drainage_evaluator.cc

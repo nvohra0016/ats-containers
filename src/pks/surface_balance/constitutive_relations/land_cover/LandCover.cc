@@ -38,9 +38,6 @@ LandCover::LandCover(Teuchos::ParameterList& plist)
     beers_k_lw(plist.get<double>("Beer's law extinction coefficient, longwave [-]", NAN)),
     snow_transition_depth(plist.get<double>("snow transition depth [m]", NAN)),
     water_transition_depth(plist.get<double>("water transition depth [m]", NAN)),
-    dessicated_zone_thickness(plist.get<double>("dessicated zone thickness [m]", NAN)),
-    clapp_horn_b(plist.get<double>("Clapp and Hornberger b [-]", NAN)),
-    rs_method(plist.get<std::string>("soil resistance method", "sakagucki_zeng")),
     roughness_ground(plist.get<double>("roughness length of bare ground [m]", NAN)),
     roughness_snow(plist.get<double>("roughness length of snow [m]", NAN)),
     mannings_n(plist.get<double>("Manning's n [?]", NAN))
@@ -133,10 +130,6 @@ checkValid(const std::string& region, const LandCover& lc, const std::string& pa
     throwInvalid(region, "snow transition depth [m]");
   if (parname == "water_transition_depth" && std::isnan(lc.water_transition_depth))
     throwInvalid(region, "water transition depth [m]");
-  if (parname == "dessicated_zone_thickness" && std::isnan(lc.dessicated_zone_thickness))
-    throwInvalid(region, "dessicated zone thickness [m]");
-  if (parname == "clapp_horn_b" && std::isnan(lc.clapp_horn_b))
-    throwInvalid(region, "Clapp and Hornberger b [-]");
   if (parname == "roughness_ground" && std::isnan(lc.roughness_ground))
     throwInvalid(region, "roughness length of bare ground [m]");
   if (parname == "roughness_snow" && std::isnan(lc.roughness_snow))

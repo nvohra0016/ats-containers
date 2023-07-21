@@ -177,10 +177,6 @@ struct LandCover {
   double water_transition_depth; // [m]
 
   // soil properties controlling evaporation
-  double dessicated_zone_thickness; // [m] Thickness over which vapor must diffuse
-                                    //  when the soil is dry.
-  double clapp_horn_b;              // [-] exponent of the WRM, Clapp & Hornberger eqn 1
-  std::string rs_method;            // soil resistance method {sakagucki_zeng, sellers, TBD}
   double roughness_ground;          // [m] Fetch length for latent/sensible heat fluxes.
   double roughness_snow;            // [m] Fetch length for latent/sensible heat fluxes.
 };

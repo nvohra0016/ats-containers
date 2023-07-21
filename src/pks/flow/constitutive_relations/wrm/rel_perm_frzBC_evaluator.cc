@@ -19,8 +19,8 @@ namespace Flow {
 RelPermFrzBCEvaluator::RelPermFrzBCEvaluator(Teuchos::ParameterList& plist)
   : EvaluatorSecondaryMonotypeCV(plist), min_val_(0.)
 {
-  AMANZI_ASSERT(plist_.isSublist("WRM parameters"));
-  Teuchos::ParameterList sublist = plist_.sublist("WRM parameters");
+  Teuchos::ParameterList& sublist = plist_.sublist("freezing rel perm parameters");
+  sublist.remove("model type", false);
   wrms_ = createWRMPartition(sublist);
   InitializeFromPlist_();
 }

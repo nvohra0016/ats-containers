@@ -26,8 +26,8 @@ WRMPermafrostEvaluator::WRMPermafrostEvaluator(Teuchos::ParameterList& plist)
   : EvaluatorSecondaryMonotypeCV(plist)
 {
   // get the WRMs
-  AMANZI_ASSERT(plist_.isSublist("WRM parameters"));
-  Teuchos::ParameterList wrm_plist = plist_.sublist("WRM parameters");
+  Teuchos::ParameterList& wrm_plist = plist_.sublist("WRM parameters");
+  wrm_plist.remove("model type", false);
   wrms_ = createWRMPartition(wrm_plist);
 
   // and the permafrost models

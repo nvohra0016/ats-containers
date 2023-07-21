@@ -32,9 +32,7 @@ These may be provided via parameter list or LandCover type.
 
 */
 
-#pragma once
-
-#include "LandCover.hh"
+#include "Teuchos_ParameterList.hpp"
 
 namespace Amanzi {
 namespace SurfaceBalance {
@@ -42,25 +40,23 @@ namespace Relations {
 
 class EvaporationDownregulationModel {
  public:
-  explicit EvaporationDownregulationModel(double dessicated_zone_thickness, double clapp_horn_b);
-  EvaporationDownregulationModel(Teuchos::ParameterList& plist);
-  EvaporationDownregulationModel(const LandCover& lc);
+  explicit EvaporationDownregulationModel(Teuchos::ParameterList& plist) {}
 
-  double Evaporation(double sg, double poro, double pot_evap, double sl) const;
+  double Evaporation(double pot_evap, double rsoil)
+  {
+    return pot_evap / (1. + rsoil);
+  }
 
-  double DEvaporationDSaturationGas(double sg, double poro, double pot_evap, double sl) const;
-  double DEvaporationDPorosity(double sg, double poro, double pot_evap, double sl) const;
-  double DEvaporationDSaturationLiquid(double sg, double poro, double pot_evap, double sl) const;
-  double
-  DEvaporationDPotentialEvaporation(double sg, double poro, double pot_evap, double sl) const;
+  double DEvaporationDPotentialEvaporation(double pot_evap, double rsoil)
+  {
+    return 1. / (1. + rsoil);
+  }
 
- protected:
-  void InitializeFromPlist_(Teuchos::ParameterList& plist);
+  double DEvaporationDRsoil(double pot_evap, double rsoil)
+  {
+    return -pot_evap * std::pow(1. + rsoil, -2);
+  }
 
- protected:
-  double dess_dz_;
-  double Clapp_Horn_b_;
-  std::string rs_method_;
 };
 
 } // namespace Relations

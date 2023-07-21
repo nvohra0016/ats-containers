@@ -22,8 +22,8 @@ namespace Flow {
 WRMEvaluator::WRMEvaluator(Teuchos::ParameterList& plist)
   : EvaluatorSecondaryMonotypeCV(plist), calc_other_sat_(true)
 {
-  AMANZI_ASSERT(plist_.isSublist("WRM parameters"));
-  Teuchos::ParameterList wrm_plist = plist_.sublist("WRM parameters");
+  Teuchos::ParameterList& wrm_plist = plist_.sublist("WRM parameters");
+  wrm_plist.remove("model type", false);
   wrms_ = createWRMPartition(wrm_plist);
 
   InitializeFromPlist_();

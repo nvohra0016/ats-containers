@@ -60,9 +60,7 @@ class EvaporationDownregulationEvaluator : public EvaluatorSecondaryMonotypeCV {
  protected:
   void InitializeFromPlist_();
 
-  Key sat_gas_key_;
-  Key sat_liq_key_;
-  Key poro_key_;
+  Key rsoil_key_;
   Key pot_evap_key_;
 
   Key domain_surf_;
