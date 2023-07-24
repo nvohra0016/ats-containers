@@ -79,6 +79,10 @@ jobs:
     steps:
       - name: Check out the ats repo
         uses: actions/checkout@v3
+        with:
+          repository: amanzi/amanzi
+          ref: master
+          submodules: recursive
       - name: Extract the branch name
         id: branch
         run:
@@ -97,7 +101,11 @@ jobs:
     needs: buildx_test
     steps: 
       - name: Check out the ats repo
-        uses: actions/checkout@v3    
+        uses: actions/checkout@v3
+        with:
+          repository: amanzi/amanzi
+          ref: master
+          submodules: recursive
       - name: Extract the ATS branch name
         id: branch
         run: |
