@@ -18,8 +18,8 @@ namespace Flow {
 RelPermSutraIceEvaluator::RelPermSutraIceEvaluator(Teuchos::ParameterList& plist)
   : EvaluatorSecondaryMonotypeCV(plist), min_val_(0.)
 {
-  Teuchos::ParameterList& sublist = plist_.sublist("WRM parameters");
-  sublist.remove("model type", false);
+  std::string params_name = plist_.get<std::string>("model parameters", "WRM parameters");
+  Teuchos::ParameterList& sublist = plist_.sublist(params_name);
   wrms_ = createWRMPartition(sublist);
   InitializeFromPlist_();
 }

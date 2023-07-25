@@ -5,34 +5,68 @@
   provided in the top-level COPYRIGHT file.
 
   Authors: Ethan Coon (ecoon@lanl.gov)
+           Bo Gao (gaob@ornl.gov)
 */
 
-/*
-  Evaluates the porosity, given a small compressibility of rock.
-
-  Compressible grains are both physically realistic (based on bulk modulus)
-  and a simple way to provide a non-elliptic, diagonal term for helping
-  solvers to converge.
-
-*/
 
 /*!
+Evaluates the soil resistance at top cells through the Sakagucki-Zeng model
+referred to Sakagucki and Zeng (2009).
 
-Compressible grains are both physically realistic (based on bulk modulus) and a
-simple way to provide a non-elliptic, diagonal term for helping solvers to
-converge.
+`"evaluator type`" = `"sakagucki-zeng soil resistance`"
 
-`"evaluator type`" = `"compressible porosity`"
+.. _sakagucki-zeng-soil-resistance-evaluator-spec
+.. admonition:: sakagucki-zeng-soil-resistance-evaluator-spec
 
-.. _compressible-porosity-evaluator-spec
-.. admonition:: compressible-porosity-evaluator-spec
+  * `"model parameters`" ``[string]`` **WRM parameters** ``[WRM-typedinline-spec-list]`` 
+  Soil resistance based on Sakagucki-Zeng method uses soil properties defined in 
+  `"WRM parameters`" which is given through `"model parameters`" under state.
+     
+    - If `"van Genuchten`" is used for WRM, either `"van Genuchten n [-]`" 
+    or `"van Genuchten m [-]`" will be used to determine Clapp-Hornberger-b 
+    through method 2 in Ma et al. (1999). Originally this method is from 
+    Lenhard et al. (1989).
 
-   * `"compressible porosity model parameters`" ``[compressible-porosity-standard-model-spec-list]``
+    - If `"Brooks-Corey`" is used for WRM, `"Brooks Corey lambda [-]`" will
+    be used to determine Clapp-Hornberger-b, which is the reciprocal of 
+    `"Brooks Corey lambda [-]`".
 
-   KEYS:
+    - `"residual saturation [-]`" ``[double]`` **0.0** 
 
-   - `"pressure`" **DOMAIN-pressure**
-   - `"base porosity`" **DOMAIN-base_porosity**
+    - `"dessicated zone thickness [m]`" ``[double]`` **0.1** 
+
+  KEYS:
+
+  - `"gas saturation`" of top cells
+  - `"porosity`" of top cells
+
+Example:
+
+.. code-block:: xml
+
+  <ParameterList name="state" type="ParameterList">
+    <ParameterList name="model parameters" type="ParameterList">
+      <ParameterList name="WRM parameters" type="ParameterList">
+        <ParameterList name="domain" type="ParameterList">
+          <Parameter name="region" type="string" value="domain" />
+          <Parameter name="WRM Type" type="string" value="van Genuchten" />
+          <Parameter name="van Genuchten alpha [Pa^-1]" type="double" value="2e-05" />
+          <Parameter name="van Genuchten n [-]" type="double" value="1.58" />
+          <Parameter name="residual saturation [-]" type="double" value="0.2" />
+          <Parameter name="smoothing interval width [saturation]" type="double" value="0.05" />
+          <Parameter name="dessicated zone thickness [m]" type="double" value="0.1" />
+        </ParameterList>
+      </ParameterList>
+    </ParameterList>
+    <ParameterList name="evaluators" type="ParameterList">
+      <ParameterList name="surface-soil_resistance" type="ParameterList">
+        <Parameter name="evaluator type" type="string" value="sakagucki-zeng soil resistance" />
+        <Parameter name="model parameters" type="string" value="WRM parameters" />
+      </ParameterList>
+      ...
+    </ParameterList>
+    ...
+  </ParameterList>
 
 */
 

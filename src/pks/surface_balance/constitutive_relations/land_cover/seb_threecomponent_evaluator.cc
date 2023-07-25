@@ -152,8 +152,8 @@ SEBThreeComponentEvaluator::SEBThreeComponentEvaluator(Teuchos::ParameterList& p
   dependencies_.insert(KeyTag{ surf_temp_key_, tag });
   surf_pres_key_ = Keys::readKey(plist, domain_, "pressure", "pressure");
   dependencies_.insert(KeyTag{ surf_pres_key_, tag });
-  rsoil_key_ = Keys::readKey(plist, domain_, "soil resistance", "soil_resistance");
-  dependencies_.insert(KeyTag{ rsoil_key_, tag });
+  surf_rsoil_key_ = Keys::readKey(plist, domain_, "soil resistance", "soil_resistance");
+  dependencies_.insert(KeyTag{ surf_rsoil_key_, tag });
 
   // -- subsurface properties for evaporating bare soil
   ss_pres_key_ = Keys::readKey(plist, domain_ss_, "subsurface pressure", "pressure");
@@ -203,7 +203,7 @@ SEBThreeComponentEvaluator::Evaluate_(const State& S, const std::vector<Composit
     *S.Get<CompositeVector>(area_frac_key_, tag).ViewComponent("cell", false);
   const auto& surf_pres = *S.Get<CompositeVector>(surf_pres_key_, tag).ViewComponent("cell", false);
   const auto& surf_temp = *S.Get<CompositeVector>(surf_temp_key_, tag).ViewComponent("cell", false);
-  const auto& rsoil = *S.Get<CompositeVector>(rsoil_key_, tag).ViewComponent("cell", false);
+  const auto& surf_rsoil = *S.Get<CompositeVector>(surf_rsoil_key_, tag).ViewComponent("cell", false);
 
   // collect subsurface properties
   const auto& ss_pres = *S.Get<CompositeVector>(ss_pres_key_, tag).ViewComponent("cell", false);
@@ -282,7 +282,7 @@ SEBThreeComponentEvaluator::Evaluate_(const State& S, const std::vector<Composit
         surf.albedo = sg_albedo[0][c];
         surf.emissivity = emissivity[0][c];
         surf.ponded_depth = 0.; // by definition
-        surf.rsoil = rsoil[0][c];
+        surf.rsoil = surf_rsoil[0][c];
         surf.unfrozen_fraction = unfrozen_fraction[0][c];
         surf.water_transition_depth = lc.second.water_transition_depth;
 
@@ -350,7 +350,7 @@ SEBThreeComponentEvaluator::Evaluate_(const State& S, const std::vector<Composit
         surf.emissivity = emissivity[1][c];
         surf.albedo = sg_albedo[1][c];
         surf.ponded_depth = std::max(lc.second.water_transition_depth, ponded_depth[0][c]);
-        surf.rsoil = rsoil[0][c];
+        surf.rsoil = surf_rsoil[0][c];
         surf.unfrozen_fraction = unfrozen_fraction[0][c];
         surf.water_transition_depth = lc.second.water_transition_depth;
 
@@ -418,7 +418,7 @@ SEBThreeComponentEvaluator::Evaluate_(const State& S, const std::vector<Composit
         surf.emissivity = emissivity[2][c];
         surf.albedo = sg_albedo[2][c];
         surf.ponded_depth = 0;    // does not matter
-        surf.rsoil = rsoil[0][c];
+        surf.rsoil = surf_rsoil[0][c];
         surf.unfrozen_fraction = unfrozen_fraction[0][c]; // does not matter
         surf.water_transition_depth = lc.second.water_transition_depth;
 

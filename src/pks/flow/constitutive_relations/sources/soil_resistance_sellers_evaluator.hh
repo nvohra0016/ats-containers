@@ -5,35 +5,50 @@
   provided in the top-level COPYRIGHT file.
 
   Authors: Ethan Coon (ecoon@lanl.gov)
+           Bo Gao (gaob@ornl.gov)
 */
 
-/*
-  Evaluates the porosity, given a small compressibility of rock.
-
-  Compressible grains are both physically realistic (based on bulk modulus)
-  and a simple way to provide a non-elliptic, diagonal term for helping
-  solvers to converge.
-
-*/
 
 /*!
+Evaluates the soil resistance at top cells through the Sellers model 
+referred to Sellers et al. (1992).
 
-Compressible grains are both physically realistic (based on bulk modulus) and a
-simple way to provide a non-elliptic, diagonal term for helping solvers to
-converge.
-
-`"evaluator type`" = `"compressible porosity`"
+`"evaluator type`" = `"sellers soil resistance`"
 
 .. _compressible-porosity-evaluator-spec
 .. admonition:: compressible-porosity-evaluator-spec
 
-   * `"compressible porosity model parameters`" ``[compressible-porosity-standard-model-spec-list]``
-
    KEYS:
 
-   - `"pressure`" **DOMAIN-pressure**
-   - `"base porosity`" **DOMAIN-base_porosity**
+   - `"liquid saturation`" of top cells
 
+Example:
+
+.. code-block:: xml
+
+  <ParameterList name="state" type="ParameterList">
+    <ParameterList name="model parameters" type="ParameterList">
+      <ParameterList name="WRM parameters" type="ParameterList">
+        <ParameterList name="domain" type="ParameterList">
+          <Parameter name="region" type="string" value="domain" />
+          <Parameter name="WRM Type" type="string" value="van Genuchten" />
+          <Parameter name="van Genuchten alpha [Pa^-1]" type="double" value="2e-05" />
+          <Parameter name="van Genuchten n [-]" type="double" value="1.58" />
+          <Parameter name="residual saturation [-]" type="double" value="0.2" />
+          <Parameter name="smoothing interval width [saturation]" type="double" value="0.05" />
+          <Parameter name="dessicated zone thickness [m]" type="double" value="0.1" />
+        </ParameterList>
+      </ParameterList>
+    </ParameterList>
+    <ParameterList name="evaluators" type="ParameterList">
+      <ParameterList name="surface-soil_resistance" type="ParameterList">
+        <Parameter name="evaluator type" type="string" value="sellers soil resistance" />
+        <Parameter name="model parameters" type="string" value="WRM parameters" />
+      </ParameterList>
+      ...
+    </ParameterList>
+    ...
+  </ParameterList>
 */
 
 

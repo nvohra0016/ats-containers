@@ -151,8 +151,8 @@ SEBTwoComponentEvaluator::SEBTwoComponentEvaluator(Teuchos::ParameterList& plist
   dependencies_.insert(KeyTag{ surf_temp_key_, tag });
   surf_pres_key_ = Keys::readKey(plist, domain_, "pressure", "pressure");
   dependencies_.insert(KeyTag{ surf_pres_key_, tag });
-  rsoil_key_ = Keys::readKey(plist, domain_, "soil resistance", "soil_resistance");
-  dependencies_.insert(KeyTag{ rsoil_key_, tag });
+  surf_rsoil_key_ = Keys::readKey(plist, domain_, "soil resistance", "soil_resistance");
+  dependencies_.insert(KeyTag{ surf_rsoil_key_, tag });
 
   // -- subsurface properties for evaporating bare soil
   ss_pres_key_ = Keys::readKey(plist, domain_ss_, "subsurface pressure", "pressure");
@@ -203,10 +203,10 @@ SEBTwoComponentEvaluator::Evaluate_(const State& S, const std::vector<CompositeV
     *S.Get<CompositeVector>(area_frac_key_, tag).ViewComponent("cell", false);
   const auto& surf_pres = *S.Get<CompositeVector>(surf_pres_key_, tag).ViewComponent("cell", false);
   const auto& surf_temp = *S.Get<CompositeVector>(surf_temp_key_, tag).ViewComponent("cell", false);
+  const auto& surf_rsoil = *S.Get<CompositeVector>(surf_rsoil_key_, tag).ViewComponent("cell", false);
 
   // collect subsurface properties
   const auto& ss_pres = *S.Get<CompositeVector>(ss_pres_key_, tag).ViewComponent("cell", false);
-  const auto& rsoil = *S.Get<CompositeVector>(rsoil_key_, tag).ViewComponent("cell", false);
 
   // collect output vecs
   auto& water_source = *results[0]->ViewComponent("cell", false);
@@ -282,7 +282,7 @@ SEBTwoComponentEvaluator::Evaluate_(const State& S, const std::vector<CompositeV
         } else {
           double factor = std::max(ponded_depth[0][c], 0.) / lc.second.water_transition_depth;
           surf.pressure = factor * surf_pres[0][c] + (1 - factor) * ss_pres[0][cells[0]];
-          surf.rsoil = (1 - factor) * rsoil[0][c];
+          surf.rsoil = (1 - factor) * surf_rsoil[0][c];
         }
         if (model_1p1_) surf.pressure = surf_pres[0][c];
         surf.ponded_depth = ponded_depth[0][c];

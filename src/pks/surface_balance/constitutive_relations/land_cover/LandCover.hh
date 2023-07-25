@@ -97,23 +97,6 @@ same region-based partitioning.
       calculated, one assuming the ponded depth is this thick, and the various
       components of the SEB are averaged by that area fraction.
 
-    * `"dessicated zone thickness [m]`" ``[double]`` **NaN** The thickness of soil
-      across which water vapor must diffuse to reach the free atmosphere.
-      Effectively, the bigger this value, the faster that bare-soil evaporation
-      shuts off as a function of pressure/liquid saturation.
-
-    * `"Clapp and Hornberger b [-]`" ``[double]`` **NaN** This is unfortunate, and
-      should go away at some point.  Clapp & Hornberger is a soil retention
-      curve, and this WRM is hard-coded into a few CLM models that we use here.
-      It would be much better to refactor this out, as we almost never use C&H
-      and instead use van Genuchten WRMs, and those parameters are soil
-      properties, not land cover properties.  Until those models are re-derived
-      and/or refactored, we must provide this value.  When in doubt, just use
-      1.
-
-    * `"soil resistance method`" ``[string]`` **NAN** This denotes what model to use
-      to calculate soil resistance. Currently support {sakagucki_zeng, sellers}.
-
     * `"roughness length of bare ground [m]`" ``[double]`` **NaN** Roughness length of
       the bare soil, used in calculating sensible/latent heat in the
       physics-based SEB model.  A typical value is 0.04.

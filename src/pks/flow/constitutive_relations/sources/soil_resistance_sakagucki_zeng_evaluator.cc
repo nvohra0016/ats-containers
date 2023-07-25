@@ -5,12 +5,14 @@
   provided in the top-level COPYRIGHT file.
 
   Authors: Ethan Coon (ecoon@lanl.gov)
+           Bo Gao (gaob@ornl.gov)
 */
 
 /*
-  Evaluates the porosity, given a small compressibility of rock.
-
+  Evaluates the soil resistance at top cells through the Sakagucki-Zeng
+  method and assign them to surface cells.
 */
+
 
 #include "Mesh_Algorithms.hh"
 #include "soil_resistance_sakagucki_zeng_evaluator.hh"
@@ -32,8 +34,8 @@ SoilResistanceSakaguckiZengEvaluator::SoilResistanceSakaguckiZengEvaluator
   poro_key_ = Keys::readKey(plist_, domain_ss, "porosity", "porosity");
   dependencies_.insert(KeyTag{ poro_key_, tag });
 
-  Teuchos::ParameterList& sublist = plist_.sublist("WRM parameters");
-  sublist.remove("model type", false);
+  std::string params_name = plist_.get<std::string>("model parameters", "WRM parameters");
+  Teuchos::ParameterList& sublist = plist_.sublist(params_name);
   models_ = createSoilResistanceModelPartition(sublist);
 }
 

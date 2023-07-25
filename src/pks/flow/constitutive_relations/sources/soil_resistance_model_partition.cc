@@ -5,11 +5,16 @@
   provided in the top-level COPYRIGHT file.
 
   Authors: Ethan Coon (ecoon@lanl.gov)
+           Bo Gao (gaob@ornl.gov)
 */
 
 /*
-  A collection of WRMs along with a Mesh Partition.
+  Mesh Partition for soil type determined soil resistance.
+  Currently this is only used for Sakagucki-Zeng model, but 
+  probably useful for other soil type determined soil resistance 
+  models that might be added in future.
 */
+
 
 #include "dbc.hh"
 #include "soil_resistance_model_partition.hh"

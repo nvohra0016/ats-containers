@@ -98,6 +98,8 @@ Richards::Richards(Teuchos::ParameterList& pk_tree,
     Teuchos::ParameterList& kr_plist = S_->GetEvaluatorList(coef_key_);
     kr_plist.setParameters(S_->GetEvaluatorList(sat_key_));
     kr_plist.set<std::string>("evaluator type", "WRM rel perm");
+  } else {
+    Teuchos::ParameterList& kr_plist = S_->GetEvaluatorList(coef_key_);
   }
 
   // scaling for permeability for better "nondimensionalization"

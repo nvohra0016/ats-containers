@@ -8,9 +8,9 @@
 */
 
 /*
-  Evaluates the porosity, given a small compressibility of rock.
-
+  Evaluates the soil resistance at top cells through the Sakagucki-Zeng model.
 */
+
 
 #include "soil_resistance_sakagucki_zeng_evaluator.hh"
 

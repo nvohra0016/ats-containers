@@ -5,12 +5,14 @@
   provided in the top-level COPYRIGHT file.
 
   Authors: Ethan Coon (ecoon@lanl.gov)
+           Bo Gao (gaob@ornl.gov)
 */
 
 /*
-  Evaluates the porosity, given a small compressibility of rock.
-
+  Evaluates the soil resistance at top cells through the Sellers method 
+  and assign them to surface cells.
 */
+
 
 #include "Mesh_Algorithms.hh"
 #include "soil_resistance_sellers_evaluator.hh"
