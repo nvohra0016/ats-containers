@@ -20,14 +20,14 @@ from amanzi_xml.utils import errors as aerrors
 from amanzi_xml.common import parameter, parameter_list
 from convert_parameters_vg2bc import get_bc_param_from_vg
 
-def add_soil_resistance(xml, rs_option="sakagucki-zeng soil resistance"):
-    # rs_option can be "sakagucki-zeng soil resistance" or "sellers soil resistance"
+def add_soil_resistance(xml, rs_option="sakagucki-zeng"):
+    # rs_option can be "sakagucki-zeng" or "sellers"
     eval_list = asearch.find_path(xml, ["state", "evaluators"])
     try:
         rs_list = asearch.child_by_name(eval_list, "surface-soil_resistance")
     except aerrors.MissingXMLError:
         rs_list = eval_list.sublist("surface-soil_resistance")
-        rs_list.append(parameter.StringParameter("evaluator type", rs_option))
+        rs_list.append(parameter.StringParameter("evaluator type", rs_option+' soil resistance'))
         rs_list.append(parameter.StringParameter("model parameters", "WRM parameters"))
     else:
         return
@@ -71,7 +71,7 @@ def del_lc_params(xml):
 
 
 def add_wrm_to_model_parameters(xml):
-    wrm_list = asearch.find_path(xml, ["PKs", "subsurface flow", "water retention evaluator"])
+    wrm_list = asearch.find_path(xml, ["water retention evaluator"])
     try:
         mpar = asearch.child_by_name(wrm_list, "model parameters")
     except aerrors.MissingXMLError:
@@ -82,7 +82,7 @@ def add_wrm_to_model_parameters(xml):
     model_par_list = asearch.find_path(xml, ["state", "model parameters"], no_skip=True)
     if not model_par_list.isElement("WRM parameters"):
         wrm_param_list = asearch.remove_element(xml, 
-            ["PKs", "subsurface flow", "water retention evaluator", "WRM parameters"], False, True)
+            ["water retention evaluator", "WRM parameters"], False, False)
         model_par_list.append(wrm_param_list)
         
     else:
@@ -127,8 +127,8 @@ def add_frz_relp_to_model_parameters(xml):
     frz_relp_par_list = model_par_list.sublist("freezing rel perm parameters")
     try:
         soil_types = asearch.children_by_tag(asearch.remove_element(xml, 
-                ["PKs", "subsurface flow", "water retention evaluator", "WRM parameters"], 
-                False, True), 'ParameterList')
+                ["water retention evaluator", "WRM parameters"], 
+                False, False), 'ParameterList')
     except aerrors.MissingXMLError:
         soil_types = asearch.children_by_tag(asearch.child_by_name(model_par_list, "WRM parameters"), 
                                              'ParameterList')
@@ -150,14 +150,19 @@ def add_frz_relp_to_model_parameters(xml):
         slist.append(parameter.DoubleParameter("Brooks Corey lambda [-]", 1 / bc_lambda_recip))
 
                 
-def update(xml, rs_option="sakagucki-zeng soil resistance", 
-           dessicated_zone_set=0.1, add_frz_relp=False):
-    """generic update calls all needed things""" 
-    add_soil_resistance(xml, rs_option)
+def update(xml, rs_option="sakagucki-zeng", dessicated_zone_set=0.1, add_frz_relp=False):
+    """generic update calls all needed things"""
+    if rs_option == "no_need":
+        pass
+    else:
+        add_soil_resistance(xml, rs_option)
     add_state_model_parameters(xml)
     add_wrm_to_model_parameters(xml)
     add_dessicated_zone_to_WRM(xml, dessicated_zone_set)
-    del_lc_params(xml)
+    try:
+        del_lc_params(xml)
+    except:
+        pass
     if not add_frz_relp:
         add_rel_perm(xml, "WRM rel perm")
     else:
@@ -171,7 +176,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("infile", help="input filename")
     parser.add_argument("--rsoil_model", default="sakagucki-zeng",
-                        choices=["sakagucki-zeng", "sellers"],
+                        choices=["sakagucki-zeng", "sellers", "no_need"],
                         help="soil resistance models")
     parser.add_argument("--dessicated_zone_set", default=0.1, nargs='+',
                         help="A set of dessicated zone thickness, can be a list same size and"+ 
@@ -188,9 +193,9 @@ if __name__ == "__main__":
     print("Converting file: %s"%args.infile)
     xml = aio.fromFile(args.infile, True)
     if args.arctic:
-        update(xml, args.rsoil_model+" soil resistance", args.dessicated_zone_set, True)
+        update(xml, args.rsoil_model, args.dessicated_zone_set, True)
     else:
-        update(xml, args.rsoil_model+" soil resistance", args.dessicated_zone_set)
+        update(xml, args.rsoil_model, args.dessicated_zone_set)
 
     if args.inplace:
         aio.toFile(xml, args.infile)
