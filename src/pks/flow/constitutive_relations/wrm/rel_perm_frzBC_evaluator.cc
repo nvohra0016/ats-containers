@@ -158,7 +158,7 @@ RelPermFrzBCEvaluator::Evaluate_(const State& S, const std::vector<CompositeVect
   for (unsigned int c = 0; c != ncells; ++c) {
     int index = (*wrms_->first)[c];
     double sat_res = wrms_->second[index]->residualSaturation();
-    double coef = BrooksCoreyFrzCoef::frzcoef(sat_c[0][c], sat_gas_c[0][c], omega_);
+    double coef = BrooksCoreyFrzCoef::frzcoef(sat_c[0][c], sat_gas_c[0][c], sat_res, omega_);
     res_c[0][c] = std::max(wrms_->second[index]->k_relative(1. - sat_gas_c[0][c]) * coef, min_val_);
   }
 
@@ -187,9 +187,9 @@ RelPermFrzBCEvaluator::Evaluate_(const State& S, const std::vector<CompositeVect
       double sat_res = wrms_->second[index]->residualSaturation();
       double krel;
 
-      double coef_b = BrooksCoreyFrzCoef::frzcoef(sat_bf[0][bf], sat_gas_bf[0][bf], omega_);
+      double coef_b = BrooksCoreyFrzCoef::frzcoef(sat_bf[0][bf], sat_gas_bf[0][bf], sat_res, omega_);
       double coef_c =
-        BrooksCoreyFrzCoef::frzcoef(sat_c[0][cells[0]], sat_gas_c[0][cells[0]], omega_);
+        BrooksCoreyFrzCoef::frzcoef(sat_c[0][cells[0]], sat_gas_c[0][cells[0]], sat_res, omega_);
 
       if (boundary_krel_ == BoundaryRelPerm::HARMONIC_MEAN) {
         double krelb =
@@ -297,7 +297,7 @@ RelPermFrzBCEvaluator::EvaluatePartialDerivative_(const State& S,
     for (unsigned int c = 0; c != ncells; ++c) {
       int index = (*wrms_->first)[c];
       double sat_res = wrms_->second[index]->residualSaturation();
-      double dcoef_dsl = BrooksCoreyFrzCoef::d_frzcoef_dsl(sat_c[0][c], sat_gas_c[0][c], omega_);
+      double dcoef_dsl = BrooksCoreyFrzCoef::d_frzcoef_dsl(sat_c[0][c], sat_gas_c[0][c], sat_res, omega_);
       res_c[0][c] = dcoef_dsl * wrms_->second[index]->k_relative(1. - sat_gas_c[0][c]);
       AMANZI_ASSERT(res_c[0][c] >= 0.);
     }
@@ -340,8 +340,8 @@ RelPermFrzBCEvaluator::EvaluatePartialDerivative_(const State& S,
     for (unsigned int c = 0; c != ncells; ++c) {
       int index = (*wrms_->first)[c];
       double sat_res = wrms_->second[index]->residualSaturation();
-      double coef = BrooksCoreyFrzCoef::frzcoef(sat_c[0][c], sat_gas_c[0][c], omega_);
-      double dcoef_dsg = BrooksCoreyFrzCoef::d_frzcoef_dsg(sat_c[0][c], sat_gas_c[0][c], omega_);
+      double coef = BrooksCoreyFrzCoef::frzcoef(sat_c[0][c], sat_gas_c[0][c], sat_res, omega_);
+      double dcoef_dsg = BrooksCoreyFrzCoef::d_frzcoef_dsg(sat_c[0][c], sat_gas_c[0][c], sat_res, omega_);
       res_c[0][c] = -coef * wrms_->second[index]->d_k_relative(1. - sat_gas_c[0][c]) +
                     dcoef_dsg * wrms_->second[index]->k_relative(1. - sat_gas_c[0][c]);
     }

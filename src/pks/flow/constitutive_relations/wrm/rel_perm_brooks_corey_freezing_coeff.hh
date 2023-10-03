@@ -16,23 +16,23 @@ namespace BrooksCoreyFrzCoef {
 
 
 inline double
-frzcoef(double sl, double sg, double omega)
+frzcoef(double sl, double sg, double sr, double omega)
 {
-  return 1. - std::exp(-omega * (sl + sg)) + std::exp(-omega);
+  return 1. - std::exp(-omega * (sl + sg - sr) / (1. - sr)) + std::exp(-omega);
 }
 
 
 inline double
-d_frzcoef_dsl(double sl, double sg, double omega)
+d_frzcoef_dsl(double sl, double sg, double sr, double omega)
 {
-  return omega * std::exp(-omega * (sl + sg));
+  return omega / (1. - sr) * std::exp(-omega * (sl + sg - sr) / (1. - sr));
 }
 
 
 inline double
-d_frzcoef_dsg(double sl, double sg, double omega)
+d_frzcoef_dsg(double sl, double sg, double sr, double omega)
 {
-  return omega * std::exp(-omega * (sl + sg));
+  return omega / (1. - sr) * std::exp(-omega * (sl + sg - sr) / (1. - sr));
 }
 
 
