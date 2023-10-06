@@ -49,6 +49,30 @@ def add_rel_perm(xml, relp_option="WRM rel perm"):
         return
 
 
+def move_wrm_relperm_params_to_relperm(xml, par):
+    relp_list = asearch.find_path(xml, ["state", "evaluators", "relative_permeability"])
+    try:
+        relperm_par = asearch.child_by_name(relp_list, par)
+    except aerrors.MissingXMLError:
+        wrm_list = asearch.find_path(xml, ["water retention evaluator"])
+        try:
+            relperm_par_in_wrm = asearch.child_by_name(wrm_list, par)
+        except aerrors.MissingXMLError:
+            print("Please add {} manually to the relative_permeability evaluator".format(par))
+        else:
+            partype = relperm_par_in_wrm.getType()
+            parvalue = relperm_par_in_wrm.getValue()
+            if partype == 'string':
+                relp_list.append(parameter.StringParameter(par, parvalue))
+            if partype == 'bool':
+                relp_list.append(parameter.BoolParameter(par, parvalue))
+            if partype == 'double':
+                relp_list.append(parameter.DoubleParameter(par, parvalue))
+            wrm_list.remove(relperm_par_in_wrm)
+    else:
+        pass
+
+
 def add_state_model_parameters(xml):
     state_list = asearch.find_path(xml, ["state",])
     try:
@@ -87,6 +111,8 @@ def add_wrm_to_model_parameters(xml):
         
     else:
         return
+
+
 
 
 def add_dessicated_zone_to_WRM(xml, dessicated_zone_set):
@@ -168,6 +194,8 @@ def update(xml, rs_option="sakagucki-zeng", dessicated_zone_set=0.1, add_frz_rel
     else:
         add_rel_perm(xml, "Brooks-Corey based high frozen rel perm")
         add_frz_relp_to_model_parameters(xml)
+    for par in ["minimum rel perm cutoff", "use surface rel perm"]:
+        move_wrm_relperm_params_to_relperm(xml, par)
 
 
 

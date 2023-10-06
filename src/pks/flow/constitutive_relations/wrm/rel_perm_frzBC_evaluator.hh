@@ -87,8 +87,6 @@ parameters to Brooks-Corey parameters.
     <ParameterList name="flow" type="ParameterList">
       ...
       <ParameterList name="water retention evaluator" type="ParameterList">
-        <Parameter name="minimum rel perm cutoff" type="double" value=" 0" />
-        <Parameter name="use surface rel perm" type="bool" value="true" />
         <Parameter name="model parameters" type="string" value="WRM parameters" />
         ...
       </ParameterList>
@@ -126,6 +124,8 @@ parameters to Brooks-Corey parameters.
         <Parameter name="evaluator type" type="string" value="Brooks-Corey based high frozen rel perm" />
         <Parameter name="omega [-]" type="double" value="2" />
         <Parameter name="model parameters" type="string" value="relative permeability parameters" />
+        <Parameter name="use surface rel perm" type="bool" value="true" />
+        <Parameter name="minimum rel perm cutoff" type="double" value=" 0" />
       </ParameterList>
       ...
     </ParameterList>

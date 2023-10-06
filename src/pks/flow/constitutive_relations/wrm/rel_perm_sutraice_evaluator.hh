@@ -69,8 +69,6 @@ Using the same set of van Genuchten model paramters for WRM and relative permeab
     <ParameterList name="flow" type="ParameterList">
       ...
       <ParameterList name="water retention evaluator" type="ParameterList">
-        <Parameter name="minimum rel perm cutoff" type="double" value=" 0" />
-        <Parameter name="use surface rel perm" type="bool" value="true" />
         <Parameter name="model parameters" type="string" value="WRM parameters" />
         ...
       </ParameterList>
@@ -97,6 +95,8 @@ Using the same set of van Genuchten model paramters for WRM and relative permeab
       <ParameterList name="relative_permeability" type="ParameterList">
         <Parameter name="evaluator type" type="string" value="SutraIce rel perm" />
         <Parameter name="model parameters" type="string" value="WRM parameters" />
+        <Parameter name="use surface rel perm" type="bool" value="true" />
+        <Parameter name="minimum rel perm cutoff" type="double" value=" 0" />
       </ParameterList>
       ...
     </ParameterList>
